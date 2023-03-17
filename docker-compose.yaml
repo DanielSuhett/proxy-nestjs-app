@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  database:
+    platform: linux/x86_64
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: database
+    restart: always
+    tty: true
+    volumes:
+      - "./bkp/mysql:/var/lib/mysql"
+    ports:
+      - "3306"
+    env_file:
+      - .env
+    networks:
+      - proxy
+  nginx:
+    image: nginx:1.22-alpine
+    container_name: proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - proxy
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: danielsuhett/app
+    container_name: app
+    volumes:
+      - .:/home/node/app
+      - ./node_modules:/home/node/app/node_modules
+    ports:
+      - "3000"
+    networks:
+      - proxy
+    env_file:
+      - .env
+    depends_on:
+      - nginx
+networks:
+  proxy:
+    driver: bridge
