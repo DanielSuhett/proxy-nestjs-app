@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { DogService } from './dog.service';
 import { Dog } from './entities/dog.entity';
 
@@ -9,6 +9,11 @@ export class DogController {
   @Get('/dogs')
   async findDogs(): Promise<Dog[]> {
     return await this.dogService.findAll();
+  }
+
+  @Put('/dog')
+  async updateDogs(): Promise<boolean> {
+    return await this.dogService.update();
   }
 
   @Post('/dog')

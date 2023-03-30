@@ -14,6 +14,11 @@ export class DogService {
     return this.dogRepository.find();
   }
 
+  async update(id: number, dog: Dog): Promise<boolean> {
+    const result = await this.dogRepository.update(id, dog);
+    return Boolean(result.affected);
+  }
+
   async create(dog: Dog): Promise<Dog> {
     return this.dogRepository.save(dog);
   }
